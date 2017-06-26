@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Drawing_Board"
       mc:Ignorable="d" 
-      d:DesignHeight="500" Width="730">
+      d:DesignHeight="500" Width="730" >
 
     <Grid Margin="0,0,0.8,0">
         <Button x:Name="btn_cursor"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="72" Background="Transparent" Click="btn_cursor_Click">
@@ -45,7 +45,8 @@
         </Button>
         <Button x:Name="btn_spoide" HorizontalAlignment="Left" VerticalAlignment="Top" Width="68" Margin="560,0,0,0" Height="72" Background="Transparent" Click="btn_spoide_Click">
             <Grid Width="68">
-                <Image Source="spoide.png" Margin="0,10,0,0.2" />
+                <Rectangle Name ="spoideRect" Fill="Black" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Width="27" Margin="17,46,0,0" Stroke="Gray"/>
+                <Image Source="spoide.png" Margin="0,0,0,27.8" />
             </Grid>
         </Button>
         <StackPanel HorizontalAlignment="Left" Height="423" VerticalAlignment="Top" Width="729" Margin="0,77,-0.2,0">

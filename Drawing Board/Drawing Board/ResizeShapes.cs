@@ -9,17 +9,19 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Drawing_Board
 {
     class ResizeShapes : Adorner
     {
-        Thumb topLeft, topRight, bottomLeft, bottomRight;
-
+        private Thumb topLeft, topRight, bottomLeft, bottomRight;
+        private Rectangle dottedLine;
         // To store and manage the adorner's visual children.
-        VisualCollection visualChildren;
-
+        private VisualCollection visualChildren;
         // Initialize the ResizingAdorner.
+        bool isExist = true;
+
         public ResizeShapes(UIElement adornedElement)
             : base(adornedElement)
         {
@@ -42,6 +44,8 @@ namespace Drawing_Board
         // Handler for resizing from the bottom-right.
         void HandleBottomRight(object sender, DragDeltaEventArgs args)
         {
+            visualChildren.Remove(dottedLine);
+            isExist = true;
             FrameworkElement adornedElement = this.AdornedElement as FrameworkElement;
             Thumb hitThumb = sender as Thumb;
 
@@ -79,6 +83,9 @@ namespace Drawing_Board
             double top_old = Canvas.GetTop(adornedElement);
             adornedElement.Height = height_new;
             Canvas.SetTop(adornedElement, top_old - (height_new - height_old));
+
+            visualChildren.Remove(dottedLine);
+            isExist = true;
         }
 
         // Handler for resizing from the top-left.
@@ -108,6 +115,9 @@ namespace Drawing_Board
             double top_old = Canvas.GetTop(adornedElement);
             adornedElement.Height = height_new;
             Canvas.SetTop(adornedElement, top_old - (height_new - height_old));
+
+            visualChildren.Remove(dottedLine);
+            isExist = true;
         }
 
         // Handler for resizing from the bottom-left.
@@ -131,11 +141,15 @@ namespace Drawing_Board
             double left_old = Canvas.GetLeft(adornedElement);
             adornedElement.Width = width_new;
             Canvas.SetLeft(adornedElement, left_old - (width_new - width_old));
+            visualChildren.Remove(dottedLine);
+            isExist = true;
         }
 
         // Arrange the Adorners.
         protected override Size ArrangeOverride(Size finalSize)
         {
+            Point point = this.TransformToAncestor(this).Transform(new Point(0, 0));
+
             // desiredWidth and desiredHeight are the width and height of the element that's being adorned.  
             // These will be used to place the ResizingAdorner at the corners of the adorned element.  
             double desiredWidth = AdornedElement.DesiredSize.Width;
@@ -148,6 +162,16 @@ namespace Drawing_Board
             topRight.Arrange(new Rect(desiredWidth - adornerWidth / 2, -adornerHeight / 2, adornerWidth, adornerHeight));
             bottomLeft.Arrange(new Rect(-adornerWidth / 2, desiredHeight - adornerHeight / 2, adornerWidth, adornerHeight));
             bottomRight.Arrange(new Rect(desiredWidth - adornerWidth / 2, desiredHeight - adornerHeight / 2, adornerWidth, adornerHeight));
+            if (isExist == true)
+            {
+                isExist = false;
+                dottedLine = new Rectangle();
+                dottedLine.Stroke = Brushes.SkyBlue;
+                dottedLine.StrokeDashArray = DoubleCollection.Parse("3,10");
+                dottedLine.Arrange(new Rect(point.X, point.Y, adornerWidth, adornerHeight));
+
+                visualChildren.Add(dottedLine);
+            }
 
             // Return the final size.
             return finalSize;
@@ -164,8 +188,8 @@ namespace Drawing_Board
             // Set some arbitrary visual characteristics.
             cornerThumb.Cursor = customizedCursor;
             cornerThumb.Height = cornerThumb.Width = 10;
-            cornerThumb.Opacity = 0.40;
-            cornerThumb.Background = new SolidColorBrush(Colors.MediumBlue);
+            cornerThumb.Opacity = 1;
+            cornerThumb.Background = Brushes.White;
 
             visualChildren.Add(cornerThumb);
         }

@@ -61,7 +61,7 @@
         <Button x:Name="btn_blue" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="29" Margin="700,0,-0.2,0" Height="34" Background ="Blue" BorderBrush="{x:Null}" Click="btn_blue_Click"/>
         <Button x:Name="btn_yellow" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="28" Margin="633,39,0,0" Height="33" Background ="Yellow" BorderBrush="{x:Null}" Click="btn_yellow_Click"/>
         <Button x:Name="btn_green" Content="" VerticalAlignment="Top" Margin="666,39,0,0" Height="33" Background ="Green" BorderBrush="{x:Null}" RenderTransformOrigin="0.524,0.4" Click="btn_green_Click" HorizontalAlignment="Left" Width="29"/>
-        <Button x:Name="btn_purple" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="29" Margin="700,39,-0.2,0" Height="33" Background ="Purple" BorderBrush="{x:Null}" Click="btn_purple_Click"/>
+        <Button x:Name="btn_white" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="29" Margin="700,39,-0.2,0" Height="33" Background ="#FFFFFDFF" BorderBrush="{x:Null}" Click="btn_white_Click"/>
 
 
 

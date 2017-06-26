@@ -29,30 +29,29 @@ namespace Drawing_Board
         bool isSpoiding = false;
         bool isCursorClick = false;
         Point currentPoint = new Point();
-        //Point currentPoint2 = new Point();
+
         Line line;
+        //Rectangle drawnRectangle;
         Brush brush = Brushes.Black;
-        bool captured = false;
-        double x_shape, x_canvas, y_shape, y_canvas;
 
         // -----------------------------
         AdornerLayer adornerLayer;
 
-        bool _isDown;
-        bool _isDragging;
+        bool isDown;
+        bool isDragging;
         bool selected = false;
         UIElement selectedElement = null;
         Point _startPoint;
-        private double _originalLeft;
-        private double _originalTop;
+        private double originalLeft;
+        private double originalTop;
 
         public BoardControl()
         {
             InitializeComponent();
             btn_eraser.Click += btn_eraser_Click;
             btn_circle.Click += btn_circle_Click;
-            //this.MouseLeftButtonDown += new MouseButtonEventHandler(Window_MouseLeftButtonDown);
-            //this.MouseLeftButtonUp += new MouseButtonEventHandler(DragFinishedMouseHandler);
+            this.MouseLeftButtonDown += new MouseButtonEventHandler(Window_MouseLeftButtonDown);
+            this.MouseLeftButtonUp += new MouseButtonEventHandler(DragFinishedMouseHandler);
             this.MouseMove += new MouseEventHandler(Window_MouseMove);
             this.MouseLeave += new MouseEventHandler(Window_MouseLeave);
         }
@@ -80,13 +79,13 @@ namespace Drawing_Board
                     // assign the selected element and add the adorner
                     if (e.Source != paintSurface)
                     {
-                        _isDown = true;
+                        isDown = true;
                         _startPoint = e.GetPosition(paintSurface);
 
                         selectedElement = e.Source as UIElement;
 
-                        _originalLeft = Canvas.GetLeft(selectedElement);
-                        _originalTop = Canvas.GetTop(selectedElement);
+                        originalLeft = Canvas.GetLeft(selectedElement);
+                        originalTop = Canvas.GetTop(selectedElement);
 
                         adornerLayer = AdornerLayer.GetAdornerLayer(selectedElement);
                         adornerLayer.Add(new ResizeShapes(selectedElement));
@@ -99,11 +98,14 @@ namespace Drawing_Board
         
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && (isDrawing==true || isErasing == true))
+            if (e.LeftButton == MouseButtonState.Pressed )
             {
-                line = drawStraight(e.GetPosition(this).X, e.GetPosition(this).Y );
-                currentPoint = e.GetPosition(this);
-                paintSurface.Children.Add(line);
+                if (isDrawing == true || isErasing == true)
+                {
+                    line = drawStraight(e.GetPosition(this).X, e.GetPosition(this).Y);
+                    currentPoint = e.GetPosition(this);
+                    paintSurface.Children.Add(line);
+                }
             }
         }
 
@@ -130,7 +132,6 @@ namespace Drawing_Board
                 else if(isCursorClick == true)
                 {
                     DragFinishedMouseHandler(sender, e);
-                    paintSurface.ReleaseMouseCapture();
                 }
             }
         }
@@ -235,10 +236,10 @@ namespace Drawing_Board
                     brush = circle.Fill;
                     spoideRect.Fill = circle.Fill;
                 }
-                else if(isCursorClick == true)
-                {
-                    shape_MouseDown(circle, e);
-                }
+                //else if(isCursorClick == true)
+                //{
+                //    shape_MouseDown(circle, e);
+                //}
             }
         }
 
@@ -261,46 +262,46 @@ namespace Drawing_Board
                     brush = rect.Fill;
                     spoideRect.Fill = rect.Fill;
                 }
-                else if(isCursorClick == true)
-                {
-                    shape_MouseDown(rect, e);
-                }
+                //else if(isCursorClick == true)
+                //{
+                //    shape_MouseDown(rect, e);
+                //}
             }
         }
 
-        private void shape_MouseDown(UIElement shape, MouseButtonEventArgs e)
-        {
-            Mouse.Capture(shape);
-            captured = true;
-            x_shape = Canvas.GetLeft(shape);
-            x_canvas = e.GetPosition(paintSurface).X;
-            y_shape = Canvas.GetTop(shape);
-            y_canvas = e.GetPosition(paintSurface).Y;
-            ReleaseMouseCapture();
-        }
+        //private void shape_MouseDown(UIElement shape, MouseButtonEventArgs e)
+        //{
+        //    Mouse.Capture(shape);
+        //    captured = true;
+        //    x_shape = Canvas.GetLeft(shape);
+        //    x_canvas = e.GetPosition(paintSurface).X;
+        //    y_shape = Canvas.GetTop(shape);
+        //    y_canvas = e.GetPosition(paintSurface).Y;
+        //    ReleaseMouseCapture();
+        //}
 
-        private void shape_MouseMove(object sender, MouseEventArgs e)
-        {
-            UIElement source = sender as UIElement;
-            if (captured)
-            {
-                double x = e.GetPosition(paintSurface).X;
-                double y = e.GetPosition(paintSurface).Y;
-                x_shape += x - x_canvas;
-                Canvas.SetLeft(source, x_shape);
-                x_canvas = x;
-                y_shape += y - y_canvas;
-                Canvas.SetTop(source, y_shape);
-                y_canvas = y;
-            }
-        }
+        //private void shape_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    UIElement source = sender as UIElement;
+        //    if (captured)
+        //    {
+        //        double x = e.GetPosition(paintSurface).X;
+        //        double y = e.GetPosition(paintSurface).Y;
+        //        x_shape += x - x_canvas;
+        //        Canvas.SetLeft(source, x_shape);
+        //        x_canvas = x;
+        //        y_shape += y - y_canvas;
+        //        Canvas.SetTop(source, y_shape);
+        //        y_canvas = y;
+        //    }
+        //}
 
-        private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            Mouse.Capture(null);
-            ReleaseMouseCapture();
-            captured = false;
-        }
+        //private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    Mouse.Capture(null);
+        //    ReleaseMouseCapture();
+        //    captured = false;
+        //}
 
         private Line drawStraight(double width, double heigth)
         {
@@ -345,9 +346,9 @@ namespace Drawing_Board
             brush = Brushes.Green;
         }
 
-        private void btn_purple_Click(object sender, RoutedEventArgs e)
+        private void btn_white_Click(object sender, RoutedEventArgs e)
         {
-            brush = Brushes.Purple;
+            brush = Brushes.White;
         }
 
         private void btn_eraser_Click(object sender, RoutedEventArgs e)
@@ -471,28 +472,28 @@ namespace Drawing_Board
         // Method for stopping dragging
         private void StopDragging()
         {
-            if (_isDown)
+            if (isDown)
             {
-                _isDown = false;
-                _isDragging = false;
+                isDown = false;
+                isDragging = false;
             }
         }
 
         // Hanler for providing drag operation with selected element
         void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_isDown)
+            if (isDown)
             {
-                if ((_isDragging == false) &&
+                if ((isDragging == false) &&
                     ((Math.Abs(e.GetPosition(paintSurface).X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance) ||
                     (Math.Abs(e.GetPosition(paintSurface).Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)))
-                    _isDragging = true;
+                    isDragging = true;
 
-                if (_isDragging)
+                if (isDragging)
                 {
                     Point position = Mouse.GetPosition(paintSurface);
-                    Canvas.SetTop(selectedElement, position.Y - (_startPoint.Y - _originalTop));
-                    Canvas.SetLeft(selectedElement, position.X - (_startPoint.X - _originalLeft));
+                    Canvas.SetTop(selectedElement, position.Y - (_startPoint.Y - originalTop));
+                    Canvas.SetLeft(selectedElement, position.X - (_startPoint.X - originalLeft));
                 }
             }
         }
@@ -505,6 +506,14 @@ namespace Drawing_Board
                 {
                     adornerLayer.Remove(adornerLayer.GetAdorners(selectedElement)[0]);
                     selectedElement = null;
+                }
+            }
+            else if(isPainting == true)
+            {
+                Canvas backGroud = e.OriginalSource as Canvas;
+                if(backGroud is Canvas)
+                {
+                    paintSurface.Background = brush;
                 }
             }
         }

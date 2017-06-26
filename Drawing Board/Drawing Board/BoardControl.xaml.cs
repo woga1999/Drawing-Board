@@ -26,6 +26,7 @@ namespace Drawing_Board
         bool isLineDrawing = false;
         bool isPainting = false;
         bool isErasing = false;
+        bool isSpoiding = false;
         Point currentPoint = new Point();
         //Point currentPoint2 = new Point();
         Line line;
@@ -47,7 +48,7 @@ namespace Drawing_Board
         
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && isDrawing==true )
+            if (e.LeftButton == MouseButtonState.Pressed && (isDrawing==true || isErasing == true))
             {
                 line = drawStraight(e.GetPosition(this).X, e.GetPosition(this).Y );
 
@@ -87,6 +88,7 @@ namespace Drawing_Board
             isLineDrawing = false;
             isPainting = false;
             isErasing = true;
+            isSpoiding = false;
         }
 
         private void btn_circle_Click(object sender, RoutedEventArgs e)
@@ -97,6 +99,7 @@ namespace Drawing_Board
             isLineDrawing = false;
             isPainting = false;
             isErasing = false;
+            isSpoiding = false;
         }
 
         private void btn_pen_Click(object sender, RoutedEventArgs e)
@@ -107,6 +110,7 @@ namespace Drawing_Board
             isLineDrawing = false;
             isPainting = false;
             isErasing = false;
+            isSpoiding = false;
         }
 
         private void btn_rectangle_Click(object sender, RoutedEventArgs e)
@@ -117,6 +121,7 @@ namespace Drawing_Board
             isLineDrawing = false;
             isPainting = false;
             isErasing = false;
+            isSpoiding = false;
         }
 
         private void btn_line_Click(object sender, RoutedEventArgs e)
@@ -127,6 +132,7 @@ namespace Drawing_Board
             isLineDrawing = true;
             isPainting = false;
             isErasing = false;
+            isSpoiding = false;
         }
 
         private void btn_paint_Click(object sender, RoutedEventArgs e)
@@ -137,13 +143,16 @@ namespace Drawing_Board
             isRectangleDrawing = false;
             isLineDrawing = false;
             isErasing = false;
+            isSpoiding = false;
         }
 
         private void drawEllipse(double width, double heigth)
         {
             Ellipse ellipse = new Ellipse();
 
-            ellipse.Stroke = Brushes.Black;
+
+            ellipse.Stroke = brush;
+
             ellipse.Fill = Brushes.Transparent;
 
             ellipse.Height = Math.Abs((heigth - 77) - (currentPoint.Y - 77));
@@ -160,7 +169,7 @@ namespace Drawing_Board
                 Canvas.SetRight(ellipse, width);
             }
 
-            if((heigth - 77) - (currentPoint.Y - 77) < 0)
+            if ((heigth - 77) - (currentPoint.Y - 77) < 0)
             {
                 Canvas.SetTop(ellipse, heigth - 77);
                 Canvas.SetBottom(ellipse, currentPoint.Y - 77);
@@ -170,7 +179,7 @@ namespace Drawing_Board
                 Canvas.SetTop(ellipse, currentPoint.Y - 77);
                 Canvas.SetBottom(ellipse, heigth - 77);
             }
-            
+
             ellipse.MouseDown += new MouseButtonEventHandler(Ellipse_OnMouseDown);
             paintSurface.Children.Add(ellipse);
         }
@@ -178,8 +187,9 @@ namespace Drawing_Board
         private void drawRectangle(double width, double heigth)
         {
             Rectangle rectangle = new Rectangle();
-            
-            rectangle.Stroke = Brushes.Black;
+
+            rectangle.Stroke = brush;
+
             rectangle.Fill = Brushes.Transparent;
 
             rectangle.Height = Math.Abs((heigth - 77) - (currentPoint.Y - 77));
@@ -202,7 +212,7 @@ namespace Drawing_Board
                 Canvas.SetBottom(rectangle, currentPoint.Y - 77);
             }
             else
-            { 
+            {
                 Canvas.SetTop(rectangle, currentPoint.Y - 77);
                 Canvas.SetBottom(rectangle, heigth - 77);
             }
@@ -225,6 +235,10 @@ namespace Drawing_Board
                 {
                     paintSurface.Children.Remove(circle);
                 }
+                else if (isSpoiding == true)
+                {
+                    brush = circle.Fill;
+                }
             }
         }
 
@@ -242,6 +256,10 @@ namespace Drawing_Board
                 {
                     paintSurface.Children.Remove(rect);
                 }
+                else if (isSpoiding == true)
+                {
+                    brush = rect.Fill;
+                }
             }
 
         }
@@ -250,7 +268,12 @@ namespace Drawing_Board
         {
             Line line = new Line();
 
-            line.Stroke = Brushes.Black;
+            line.Stroke = brush;
+            if(isErasing == true)
+            {
+                line.StrokeThickness = 15;
+                line.Stroke = Brushes.White;
+            }
             line.X1 = currentPoint.X;
             line.Y1 = currentPoint.Y - 77;
             line.X2 = width;
@@ -287,6 +310,22 @@ namespace Drawing_Board
         private void btn_purple_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Purple;
+        }
+
+        private void btn_spoide_Click(object sender, RoutedEventArgs e)
+        {
+            isPainting = false;
+            isDrawing = false;
+            isCircleDrawing = false;
+            isRectangleDrawing = false;
+            isLineDrawing = false;
+            isErasing = false;
+            isSpoiding = true;
+        }
+
+        private void btn_cursor_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -103,6 +103,30 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="circle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cursor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="eraser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Paint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pencile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="rectangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="spoide.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

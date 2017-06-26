@@ -5,30 +5,64 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Drawing_Board"
       mc:Ignorable="d" 
-      d:DesignHeight="500" Width="700">
+      d:DesignHeight="500" Width="730">
 
     <Grid Margin="0,0,0.8,0">
-        <Button x:Name="btn_cursor" Content="커서" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="72" Background="Transparent"/>
-        <Button x:Name="btn_circle" Content="원" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="240,0,0,0" Height="72" Background="Transparent"/>
-        <Button x:Name="btn_line" Content="직선" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="160,0,0,0" Height="72" Background="Transparent" Click="btn_line_Click"/>
-        <Button x:Name="btn_eraser" Content="지우개" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="80,0,0,0" Height="72" Background="Transparent"/>
-        <Button x:Name="btn_paint" Content="페인트" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="480,0,0,0" Height="72" Background="Transparent"/>
-        <Button x:Name="btn_pen" Content="펜" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="400,0,0,0" Height="72" Background="Transparent" Click="btn_pen_Click" />
-        <Button x:Name="btn_rectangle" Content="사각형" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="320,0,0,0" Height="72" Background="Transparent" Click="btn_rectangle_Click"/>
-
-        <StackPanel HorizontalAlignment="Left" Height="423" VerticalAlignment="Top" Width="699" Margin="0,77,0,0">
-            <Canvas Name="paintSurface" Height="423" Margin="0,0,0.2,0" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" >
+        <Button x:Name="btn_cursor"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="72" Background="Transparent">
+            <Grid Width="75">
+                <Image Source="cursor.png" Margin="0,10,0,-0.2" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_circle"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="240,0,0,0" Height="72" Background="Transparent">
+            <Grid Width="75">
+                <Image Source="circle.png" Margin="0,0,0,-0.2" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_line" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="160,0,0,0" Height="72" Background="Transparent" Click="btn_line_Click">
+            <Grid Width="75">
+                <Image Source="line.png" Margin="0,0,0,-0.2" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_eraser" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="80,0,0,0" Height="72" Background="Transparent">
+            <Grid Width="75">
+                <Image Source="eraser.png" Margin="0,0,0,-0.2" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_paint" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="480,0,0,0" Height="72" Background="Transparent" Click="btn_paint_Click">
+            <Grid Width="75">
+                <Image Source="paint.png" Margin="0,0,0,-0.2" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_pen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="400,0,0,0" Height="72" Background="Transparent" Click="btn_pen_Click" >
+            <Grid Width="75">
+                <Image Source="pencile.png" Margin="0,0,0,-0.2" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_rectangle" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="320,0,0,0" Height="72" Background="Transparent" Click="btn_rectangle_Click">
+            <Grid Width="75">
+                <Image Source="rectangle.png" Margin="0,10,10,9.8" />
+            </Grid>
+        </Button>
+        <Button x:Name="btn_spoide" HorizontalAlignment="Left" VerticalAlignment="Top" Width="68" Margin="560,0,0,0" Height="72" Background="Transparent">
+            <Grid Width="68">
+                <Image Source="spoide.png" Margin="0,10,0,0.2" />
+            </Grid>
+        </Button>
+        <StackPanel HorizontalAlignment="Left" Height="423" VerticalAlignment="Top" Width="729" Margin="0,77,-0.2,0">
+            <Canvas Name="paintSurface" Height="423" Margin="0,0,-0.2,0" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" >
                 <Canvas.Background>
                     <SolidColorBrush Color="White" Opacity="0"/>
                 </Canvas.Background>
             </Canvas>
         </StackPanel>
-        <Button x:Name="btn_black" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="39" Margin="560,5,0,0" Height="34" Background ="Black" BorderBrush="{x:Null}"/>
-        <Button x:Name="btn_red" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="604,5,0,0" Height="34" Background ="Red" BorderBrush="{x:Null}" />
-        <Button x:Name="btn_blue" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="44" Margin="655,5,0,0" Height="34" Background ="Blue" BorderBrush="{x:Null}"/>
-        <Button x:Name="btn_yellow" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="39" Margin="560,44,0,0" Height="28" Background ="Yellow" BorderBrush="{x:Null}"/>
-        <Button x:Name="btn_green" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="46" Margin="604,44,0,0" Height="28" Background ="Green" BorderBrush="{x:Null}"/>
-        <Button x:Name="btn_purple" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="44" Margin="655,44,0,0" Height="28" Background ="Purple" BorderBrush="{x:Null}"/>
+        <Button x:Name="btn_black" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="28" Margin="634,0,0,0" Height="34" Background ="Black" BorderBrush="{x:Null}" Click="btn_black_Click"/>
+        <Button x:Name="btn_red" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="28" Margin="667,0,0,0" Height="34" Background ="Red" BorderBrush="{x:Null}" Click="btn_red_Click" />
+        <Button x:Name="btn_blue" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="29" Margin="700,0,-0.2,0" Height="34" Background ="Blue" BorderBrush="{x:Null}" Click="btn_blue_Click"/>
+        <Button x:Name="btn_yellow" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="28" Margin="633,39,0,0" Height="33" Background ="Yellow" BorderBrush="{x:Null}" Click="btn_yellow_Click"/>
+        <Button x:Name="btn_green" Content="" VerticalAlignment="Top" Margin="666,39,0,0" Height="33" Background ="Green" BorderBrush="{x:Null}" RenderTransformOrigin="0.524,0.4" Click="btn_green_Click" HorizontalAlignment="Left" Width="29"/>
+        <Button x:Name="btn_purple" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="29" Margin="700,39,-0.2,0" Height="33" Background ="Purple" BorderBrush="{x:Null}" Click="btn_purple_Click"/>
+
+
 
 
     </Grid>

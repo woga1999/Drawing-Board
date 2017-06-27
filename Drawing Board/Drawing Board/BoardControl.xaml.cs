@@ -20,6 +20,14 @@ namespace Drawing_Board
     /// </summary>
     public partial class BoardControl : UserControl
     {
+        Point currentPoint = new Point(); //현재 좌표 구하기 위해 쓰이는 객체
+        Line line;
+        Brush brush = Brushes.Black; //처음 브러쉬 색을 정해주고 브러쉬 변수명 
+        AdornerLayer adornerLayer;
+        UIElement selectedElement = null; //그 선택한 도형 정보를 받기 위한 클래스
+        Point startPoint; //드래깅 할 때 시작 포인트좌표
+        RotateTransform rotation = new RotateTransform();
+
         bool isDrawing = true; //맨 처음 혹은 펜 그리기 할 때 판단하는 bool
         bool isRectangleDrawing = false; //사각형 그리기 할 지 안 할지 판단
         bool isCircleDrawing = false; //원 그리기 할 지 안 할지 판단
@@ -28,21 +36,13 @@ namespace Drawing_Board
         bool isErasing = false; //지우개 기능 쓸 것인지 쓰지 않을 것인지 판단
         bool isSpoiding = false; //색 뽑아내기 기능 쓸 것인지 판단
         bool isCursorClick = false; //커서 기능 쓸 것인지 안 쓸 것인지 판단
-
-        Point currentPoint = new Point(); //현재 좌표 구하기 위해 쓰이는 객체
-        Line line; 
-        //Rectangle drawnRectangle;
-        Brush brush = Brushes.Black; //처음 브러쉬 색을 정해주고 브러쉬 변수명 
-        AdornerLayer adornerLayer;
-
         bool isDown; //커서가 바탕에 있는지 없는지를 판단하는 변수
         bool isDragging; //drag하는지 하지 않는지를 판단하는 변수
         bool selected = false; //도형을 선택했는 지 하지 않았는지를 판단하는 변수
-        UIElement selectedElement = null; //그 선택한 도형 정보를 받기 위한 클래스
-        /// </summary>
-        Point startPoint; //드래깅 할 때 시작 포인트좌표
+        
         private double originalLeft; //드래깅 하기 전 왼쪽 좌표 값
         private double originalTop; //드래깅 하기 전 위쪽 좌표 값
+        double angle = 0;
 
         public BoardControl()
         {
@@ -55,12 +55,13 @@ namespace Drawing_Board
             this.MouseLeave += new MouseEventHandler(Window_MouseLeave);
         }
         
+        //canvas 내 지역 마우스 갖다 대서 누를 시 발동하는 이벤트
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
             {
                 currentPoint = e.GetPosition(this);
-                if(isCursorClick == true)
+                if (isCursorClick == true)
                 {
                     if (selected)
                     {
@@ -97,6 +98,7 @@ namespace Drawing_Board
         
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
+            UIElement source = sender as UIElement;
             if (e.LeftButton == MouseButtonState.Pressed )
             {
                 if (isDrawing == true || isErasing == true)
@@ -105,6 +107,12 @@ namespace Drawing_Board
                     currentPoint = e.GetPosition(this);
                     paintSurface.Children.Add(line);
                 }
+                //else if (source is Rectangle)
+                //{
+                //    Rectangle rect = (Rectangle)source;
+                //    rotation.CenterX = Canvas.GetLeft(source) + rect.Width / 2;
+                //    rotation.CenterY = Canvas.GetTop(source) + rect.Height / 2;
+                //}
             }
         }
 
@@ -120,20 +128,20 @@ namespace Drawing_Board
                 else if(isRectangleDrawing == true)
                 {
                     drawRectangle(e.GetPosition(this).X, e.GetPosition(this).Y);
-                    
                 }
                 else if(isLineDrawing == true)
                 {
                     line = drawStraight(e.GetPosition(this).X, e.GetPosition(this).Y);
                     paintSurface.Children.Add(line);
                 }
-                else if(isCursorClick == true)
-                {
-                    DragFinishedMouseHandler(sender, e);
-                }
+                //else if(isCursorClick == true)
+                //{
+                //    DragFinishedMouseHandler(sender, e);
+                //}
             }
         }
         
+        //원형 도형 그리는 함수
         private void drawEllipse(double width, double heigth)
         {
             Ellipse ellipse = new Ellipse();
@@ -141,7 +149,7 @@ namespace Drawing_Board
 
             ellipse.Stroke = brush;
 
-            ellipse.Fill = Brushes.White;
+            ellipse.Fill = Brushes.Transparent;
 
             ellipse.Height = Math.Abs(heigth - currentPoint.Y);
             ellipse.Width = Math.Abs(width - currentPoint.X);
@@ -169,19 +177,20 @@ namespace Drawing_Board
             }
 
             ellipse.MouseDown += new MouseButtonEventHandler(Ellipse_OnMouseDown);
-            //ellipse.MouseMove += new MouseEventHandler(shape_MouseMove);
+            ellipse.MouseMove += new MouseEventHandler(shape_MouseMove);
             //ellipse.MouseLeftButtonUp += new MouseButtonEventHandler(shape_MouseLeftButtonUp);
 
             paintSurface.Children.Add(ellipse);
         }
 
+        //사각형 그리는 함수
         private void drawRectangle(double width, double heigth)
         {
             Rectangle rectangle = new Rectangle();
 
             rectangle.Stroke = brush;
 
-            rectangle.Fill = Brushes.White;
+            rectangle.Fill = Brushes.Transparent;
 
             rectangle.Height = Math.Abs(heigth  - currentPoint.Y);
             rectangle.Width = Math.Abs(width - currentPoint.X);
@@ -213,6 +222,7 @@ namespace Drawing_Board
             paintSurface.Children.Add(rectangle);
         }
 
+        //원 누를 시 발동하는 이벤트
         private void Ellipse_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -239,6 +249,7 @@ namespace Drawing_Board
             }
         }
 
+        //사각형 누를 시 발동하는 이벤트
         private void Rectangle_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
@@ -274,22 +285,26 @@ namespace Drawing_Board
         //    y_canvas = e.GetPosition(paintSurface).Y;
         //    ReleaseMouseCapture();
         //}
+        
+        //도형 마우스 갖다 댈 시 발생하느 이벤트 함수
+        private void shape_MouseMove(object sender, MouseEventArgs e)
+        {
+           if (isCursorClick == true)
+                {
+                    Ellipse ell = (Ellipse)e.OriginalSource;
 
-        //private void shape_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    UIElement source = sender as UIElement;
-        //    if (captured)
-        //    {
-        //        double x = e.GetPosition(paintSurface).X;
-        //        double y = e.GetPosition(paintSurface).Y;
-        //        x_shape += x - x_canvas;
-        //        Canvas.SetLeft(source, x_shape);
-        //        x_canvas = x;
-        //        y_shape += y - y_canvas;
-        //        Canvas.SetTop(source, y_shape);
-        //        y_canvas = y;
-        //    }
-        //}
+                    //else if (source is Rectangle)
+                    //{
+                    //    Rectangle rect = (Rectangle)source;
+                    //    rotation.CenterX = Canvas.GetLeft(source) + rect.Width / 2;
+                    //    rotation.CenterY = Canvas.GetTop(source) + rect.Height / 2;
+                    //}
+                    ell.RenderTransform = rotation;
+                    rotation.Angle = angle; // yes, Angle is a double
+                    angle += 1;
+                }
+            
+        }
 
         //private void shape_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         //{
@@ -316,6 +331,7 @@ namespace Drawing_Board
             return line;
         }
 
+        //-------색상 버튼, 기능 버튼 선택 시 ---
         private void btn_black_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Black;
@@ -456,13 +472,14 @@ namespace Drawing_Board
             isErasing = false;
             isSpoiding = false;
         }
+
         void Window_MouseLeave(object sender, MouseEventArgs e)
         {
             StopDragging();
             e.Handled = true;
         }
 
-        // Handler for drag stopping on user choise
+        // 드래깅 하게끔 하는 thumb를 이용하지 못 하는 이벤트 핸들러
         void DragFinishedMouseHandler(object sender, MouseButtonEventArgs e)
         {
             StopDragging();
@@ -470,7 +487,7 @@ namespace Drawing_Board
             paintSurface.ReleaseMouseCapture();
         }
 
-        // Method for stopping dragging
+        // 도형 움직이는 걸 멈추게 하는 함수
         private void StopDragging()
         {
             if (isDown)
@@ -480,7 +497,7 @@ namespace Drawing_Board
             }
         }
 
-        // Hanler for providing drag operation with selected element
+        //움직일 시 선택한 도형이 움직이게
         void Window_MouseMove(object sender, MouseEventArgs e)
         {
             if (isDown)
@@ -518,5 +535,8 @@ namespace Drawing_Board
                 }
             }
         }
+        
     }
 }
+    
+

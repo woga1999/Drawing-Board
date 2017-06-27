@@ -8,6 +8,13 @@
       d:DesignHeight="500" Width="800" >
 
     <Grid Margin="0,0,0.8,0" Background="WhiteSmoke">
+        <StackPanel Height="423" VerticalAlignment="Top" Margin="0,77,0.2,0" Background="White">
+            <Canvas x:Name="paintSurface" Height="423" Margin="0,0,0.2,0" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" >
+                <Canvas.Background>
+                    <SolidColorBrush Color="White" Opacity="0"/>
+                </Canvas.Background>
+            </Canvas>
+        </StackPanel>
         <Button x:Name="btn_cursor"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="72" Background="Transparent" Click="btn_cursor_Click">
             <Grid Width="75">
                 <Image Source="ImageFolder/cursor.png" Margin="0,10,0,-0.2" />
@@ -50,13 +57,7 @@
         </Button>
         <Rectangle Name ="showColor" Fill="Black" HorizontalAlignment="Left" Height="44" VerticalAlignment="Top" Width="50" Margin="640,4,0,0"/>
         <Rectangle Fill="Transparent" Height="72" VerticalAlignment="Top" Stroke="Gray" Margin="633,0,104.2,0"/>
-        <StackPanel Height="423" VerticalAlignment="Top" Margin="0,77,0.2,0" Background="White">
-            <Canvas x:Name="paintSurface" Height="423" Margin="0,0,-70.2,0" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" >
-                <Canvas.Background>
-                    <SolidColorBrush Color="White" Opacity="0"/>
-                </Canvas.Background>
-            </Canvas>
-        </StackPanel>
+       
         <Button x:Name="btn_black" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="28" Margin="700,0,0,0" Height="34" Background ="Black" BorderBrush="Gray" Click="btn_black_Click"/>
         <Button x:Name="btn_red" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="28" Margin="736,0,0,0" Height="34" Background ="Red" BorderBrush="Gray" Click="btn_red_Click" />
         <Button x:Name="btn_blue" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="29" Margin="770,0,0,0" Height="34" Background ="Blue" BorderBrush="Gray" Click="btn_blue_Click"/>

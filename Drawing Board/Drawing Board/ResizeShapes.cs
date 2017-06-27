@@ -44,8 +44,6 @@ namespace Drawing_Board
         // Handler for resizing from the bottom-right.
         void HandleBottomRight(object sender, DragDeltaEventArgs args)
         {
-            visualChildren.Remove(dottedLine);
-            isExist = true;
             FrameworkElement adornedElement = this.AdornedElement as FrameworkElement;
             Thumb hitThumb = sender as Thumb;
 
@@ -59,6 +57,9 @@ namespace Drawing_Board
             // than the width or height of an adorner, respectively.
             adornedElement.Width = Math.Max(adornedElement.Width + args.HorizontalChange, hitThumb.DesiredSize.Width);
             adornedElement.Height = Math.Max(args.VerticalChange + adornedElement.Height, hitThumb.DesiredSize.Height);
+
+            visualChildren.Remove(dottedLine);
+            isExist = true;
         }
 
         // Handler for resizing from the top-right.
@@ -79,10 +80,10 @@ namespace Drawing_Board
             //adornedElement.Height = Math.Max(adornedElement.Height - args.VerticalChange, hitThumb.DesiredSize.Height);
 
             double height_old = adornedElement.Height;
-            double height_new = Math.Max(adornedElement.Height - args.VerticalChange, hitThumb.DesiredSize.Height);
+            double height_new = Math.Max(Math.Abs(adornedElement.Height - args.VerticalChange), hitThumb.DesiredSize.Height);
             double top_old = Canvas.GetTop(adornedElement);
             adornedElement.Height = height_new;
-            Canvas.SetTop(adornedElement, top_old - (height_new - height_old));
+            Canvas.SetTop(adornedElement, Math.Abs(top_old - (height_new - height_old)));
 
             visualChildren.Remove(dottedLine);
             isExist = true;
@@ -105,16 +106,16 @@ namespace Drawing_Board
             //adornedElement.Height = Math.Max(adornedElement.Height - args.VerticalChange, hitThumb.DesiredSize.Height);
 
             double width_old = adornedElement.Width;
-            double width_new = Math.Max(adornedElement.Width - args.HorizontalChange, hitThumb.DesiredSize.Width);
+            double width_new = Math.Max(Math.Abs(adornedElement.Width - args.HorizontalChange), hitThumb.DesiredSize.Width);
             double left_old = Canvas.GetLeft(adornedElement);
             adornedElement.Width = width_new;
-            Canvas.SetLeft(adornedElement, left_old - (width_new - width_old));
+            Canvas.SetLeft(adornedElement, Math.Abs(left_old - (width_new - width_old)));
 
             double height_old = adornedElement.Height;
-            double height_new = Math.Max(adornedElement.Height - args.VerticalChange, hitThumb.DesiredSize.Height);
+            double height_new = Math.Max(Math.Abs(adornedElement.Height - args.VerticalChange), hitThumb.DesiredSize.Height);
             double top_old = Canvas.GetTop(adornedElement);
             adornedElement.Height = height_new;
-            Canvas.SetTop(adornedElement, top_old - (height_new - height_old));
+            Canvas.SetTop(adornedElement, Math.Abs(top_old - (height_new - height_old)));
 
             visualChildren.Remove(dottedLine);
             isExist = true;
@@ -137,10 +138,11 @@ namespace Drawing_Board
             adornedElement.Height = Math.Max(args.VerticalChange + adornedElement.Height, hitThumb.DesiredSize.Height);
 
             double width_old = adornedElement.Width;
-            double width_new = Math.Max(adornedElement.Width - args.HorizontalChange, hitThumb.DesiredSize.Width);
+            double width_new = Math.Max(Math.Abs(adornedElement.Width - args.HorizontalChange), hitThumb.DesiredSize.Width);
             double left_old = Canvas.GetLeft(adornedElement);
             adornedElement.Width = width_new;
-            Canvas.SetLeft(adornedElement, left_old - (width_new - width_old));
+            Canvas.SetLeft(adornedElement, Math.Abs(left_old - (width_new - width_old)));
+
             visualChildren.Remove(dottedLine);
             isExist = true;
         }
@@ -162,6 +164,7 @@ namespace Drawing_Board
             topRight.Arrange(new Rect(desiredWidth - adornerWidth / 2, -adornerHeight / 2, adornerWidth, adornerHeight));
             bottomLeft.Arrange(new Rect(-adornerWidth / 2, desiredHeight - adornerHeight / 2, adornerWidth, adornerHeight));
             bottomRight.Arrange(new Rect(desiredWidth - adornerWidth / 2, desiredHeight - adornerHeight / 2, adornerWidth, adornerHeight));
+
             if (isExist == true)
             {
                 isExist = false;
@@ -190,6 +193,7 @@ namespace Drawing_Board
             cornerThumb.Height = cornerThumb.Width = 10;
             cornerThumb.Opacity = 1;
             cornerThumb.Background = Brushes.White;
+            cornerThumb.BorderBrush = Brushes.Black;
 
             visualChildren.Add(cornerThumb);
         }

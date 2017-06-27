@@ -20,30 +20,29 @@ namespace Drawing_Board
     /// </summary>
     public partial class BoardControl : UserControl
     {
-        bool isDrawing = true;
-        bool isRectangleDrawing = false;
-        bool isCircleDrawing = false;
-        bool isLineDrawing = false;
-        bool isPainting = false;
-        bool isErasing = false;
-        bool isSpoiding = false;
-        bool isCursorClick = false;
-        Point currentPoint = new Point();
+        bool isDrawing = true; //맨 처음 혹은 펜 그리기 할 때 판단하는 bool
+        bool isRectangleDrawing = false; //사각형 그리기 할 지 안 할지 판단
+        bool isCircleDrawing = false; //원 그리기 할 지 안 할지 판단
+        bool isLineDrawing = false; //직선 그리기 하는지 하지 않는지 판단
+        bool isPainting = false; //페인팅 할 것인지 하지 않을 것인지 판단
+        bool isErasing = false; //지우개 기능 쓸 것인지 쓰지 않을 것인지 판단
+        bool isSpoiding = false; //색 뽑아내기 기능 쓸 것인지 판단
+        bool isCursorClick = false; //커서 기능 쓸 것인지 안 쓸 것인지 판단
 
-        Line line;
+        Point currentPoint = new Point(); //현재 좌표 구하기 위해 쓰이는 객체
+        Line line; 
         //Rectangle drawnRectangle;
-        Brush brush = Brushes.Black;
-
-        // -----------------------------
+        Brush brush = Brushes.Black; //처음 브러쉬 색을 정해주고 브러쉬 변수명 
         AdornerLayer adornerLayer;
 
-        bool isDown;
-        bool isDragging;
-        bool selected = false;
-        UIElement selectedElement = null;
-        Point _startPoint;
-        private double originalLeft;
-        private double originalTop;
+        bool isDown; //커서가 바탕에 있는지 없는지를 판단하는 변수
+        bool isDragging; //drag하는지 하지 않는지를 판단하는 변수
+        bool selected = false; //도형을 선택했는 지 하지 않았는지를 판단하는 변수
+        UIElement selectedElement = null; //그 선택한 도형 정보를 받기 위한 클래스
+        /// </summary>
+        Point startPoint; //드래깅 할 때 시작 포인트좌표
+        private double originalLeft; //드래깅 하기 전 왼쪽 좌표 값
+        private double originalTop; //드래깅 하기 전 위쪽 좌표 값
 
         public BoardControl()
         {
@@ -80,7 +79,7 @@ namespace Drawing_Board
                     if (e.Source != paintSurface)
                     {
                         isDown = true;
-                        _startPoint = e.GetPosition(paintSurface);
+                        startPoint = e.GetPosition(paintSurface);
 
                         selectedElement = e.Source as UIElement;
 
@@ -114,7 +113,6 @@ namespace Drawing_Board
             
             if (e.ButtonState == MouseButtonState.Released)
             {
-                //currentPoint2 = e.GetPosition(this);
                 if (isCircleDrawing == true)
                 {
                     drawEllipse(e.GetPosition(this).X, e.GetPosition(this).Y);
@@ -143,7 +141,7 @@ namespace Drawing_Board
 
             ellipse.Stroke = brush;
 
-            ellipse.Fill = Brushes.Transparent;
+            ellipse.Fill = Brushes.White;
 
             ellipse.Height = Math.Abs(heigth - currentPoint.Y);
             ellipse.Width = Math.Abs(width - currentPoint.X);
@@ -183,7 +181,7 @@ namespace Drawing_Board
 
             rectangle.Stroke = brush;
 
-            rectangle.Fill = Brushes.Transparent;
+            rectangle.Fill = Brushes.White;
 
             rectangle.Height = Math.Abs(heigth  - currentPoint.Y);
             rectangle.Width = Math.Abs(width - currentPoint.X);
@@ -211,8 +209,6 @@ namespace Drawing_Board
             }
 
             rectangle.MouseDown += new MouseButtonEventHandler(Rectangle_OnMouseDown);
-            //rectangle.MouseMove += new MouseEventHandler(shape_MouseMove);
-            //rectangle.MouseLeftButtonUp += new MouseButtonEventHandler(shape_MouseLeftButtonUp);
 
             paintSurface.Children.Add(rectangle);
         }
@@ -234,7 +230,7 @@ namespace Drawing_Board
                 else if (isSpoiding == true)
                 {
                     brush = circle.Fill;
-                    spoideRect.Fill = circle.Fill;
+                    showColor.Fill = circle.Fill;
                 }
                 //else if(isCursorClick == true)
                 //{
@@ -248,7 +244,6 @@ namespace Drawing_Board
             if (e.ButtonState == MouseButtonState.Pressed)
             {
                 Rectangle rect = (Rectangle)e.OriginalSource;
-                //UIElement shape = e.Source as UIElement;
                 if (isPainting == true)
                 {
                     rect.Fill = brush;
@@ -260,7 +255,7 @@ namespace Drawing_Board
                 else if (isSpoiding == true)
                 {
                     brush = rect.Fill;
-                    spoideRect.Fill = rect.Fill;
+                    showColor.Fill = rect.Fill;
                 }
                 //else if(isCursorClick == true)
                 //{
@@ -324,31 +319,37 @@ namespace Drawing_Board
         private void btn_black_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Black;
+            showColor.Fill = brush;
         }
 
         private void btn_red_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Red;
+            showColor.Fill = brush;
         }
 
         private void btn_blue_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Blue;
+            showColor.Fill = brush;
         }
 
         private void btn_yellow_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Yellow;
+            showColor.Fill = brush;
         }
 
         private void btn_green_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.Green;
+            showColor.Fill = brush;
         }
 
         private void btn_white_Click(object sender, RoutedEventArgs e)
         {
             brush = Brushes.White;
+            showColor.Fill = brush;
         }
 
         private void btn_eraser_Click(object sender, RoutedEventArgs e)
@@ -485,15 +486,15 @@ namespace Drawing_Board
             if (isDown)
             {
                 if ((isDragging == false) &&
-                    ((Math.Abs(e.GetPosition(paintSurface).X - _startPoint.X) > SystemParameters.MinimumHorizontalDragDistance) ||
-                    (Math.Abs(e.GetPosition(paintSurface).Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)))
+                    ((Math.Abs(e.GetPosition(paintSurface).X - startPoint.X) > SystemParameters.MinimumHorizontalDragDistance) ||
+                    (Math.Abs(e.GetPosition(paintSurface).Y - startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)))
                     isDragging = true;
 
                 if (isDragging)
                 {
                     Point position = Mouse.GetPosition(paintSurface);
-                    Canvas.SetTop(selectedElement, position.Y - (_startPoint.Y - originalTop));
-                    Canvas.SetLeft(selectedElement, position.X - (_startPoint.X - originalLeft));
+                    Canvas.SetTop(selectedElement, position.Y - (startPoint.Y - originalTop));
+                    Canvas.SetLeft(selectedElement, position.X - (startPoint.X - originalLeft));
                 }
             }
         }

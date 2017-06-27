@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Drawing_Board"
         mc:Ignorable="d"
-        Title="그림판" Height="550" Width="750">
+        Title="그림판" Height="550" Width="820">
     <Grid Name="MainGrid">
         
     </Grid>
